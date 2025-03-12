@@ -1,0 +1,25 @@
+import pandas as pd
+
+# Lade den Titanic-Datensatz
+df = pd.read_csv('/workspaces/scientific_programming/Week_02/challenge/Titanic-Dataset.csv')
+
+# 3. Identifiziere die Datentypen
+print(df.dtypes)
+
+# 4. Transformiere die 'Sex'-Spalte
+df_sex_transformed = pd.get_dummies(df['Sex'], prefix='Sex')
+df = pd.concat([df, df_sex_transformed], axis=1)
+df.drop('Sex', axis=1, inplace=True)
+
+# 5. Erstelle ein Subset des Titanic-Datensatzes
+subset = df[
+    (df['Survived'] == 1) &
+    (
+        (df['Sex_female'] == 1) & (df['Age'] > 45) |
+        (df['Sex_male'] == 1) & (df['Age'] < 20)
+    )
+]
+
+# 6. Anzahl der ausgewählten Passagiere
+num_passengers_selected = subset.shape[0]
+print(f"Anzahl der ausgewählten Passagiere: {num_passengers_selected}")
